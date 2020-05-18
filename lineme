@@ -1,0 +1,3 @@
+#!/bin/sh
+# Run LINE as a standalone on Brave, chromium or chrome
+brave --app=chrome-extension://ophjlpahpchlmihnnnihgmmeilfjmjjc/index.html || chromium --app=chrome-extension://ophjlpahpchlmihnnnihgmmeilfjmjjc/index.html || chrome --app=chrome-extension://ophjlpahpchlmihnnnihgmmeilfjmjjc/index.html
