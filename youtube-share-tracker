@@ -1,0 +1,62 @@
+#!/bin/python
+# -*- coding: utf-8 -*-
+
+import os
+import googleapiclient.discovery
+
+# # Disable OAuthlib's HTTPS verification when running locally.
+# # *DO NOT* leave this option enabled in production.
+# os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+
+api_service_name = "youtube"
+api_version = "v3"
+from settings import DEVELOPER_KEY, CHANNEL_ID
+
+youtube = googleapiclient.discovery.build(
+    api_service_name, api_version, developerKey = DEVELOPER_KEY)
+
+def get_channel_videos(channelId):
+    response = youtube.channels().list(
+        part="contentDetails",
+        id=channelId
+    ).execute()
+    uploads_id = response['items'][0]['contentDetails']['relatedPlaylists']['uploads']
+    videos = []
+    next_page_token = None
+    while True:
+        response = youtube.playlistItems().list(
+            playlistId=uploads_id,
+            part="snippet",
+            maxResults=10,
+            pageToken=next_page_token
+        ).execute()
+        videos += response['items']
+        next_page_token = response.get('nextPageToken')
+        if not next_page_token:
+            return videos
+
+videos = get_channel_videos(channelId=CHANNEL_ID)
+
+vids = [ {
+    'upload date': v["snippet"]["publishedAt"],
+    'id': v["snippet"]["resourceId"]["videoId"],
+    'title': v["snippet"]["title"]
+} for v in videos ]
+
+uploaded_path = "./uploaded.txt"
+with open(uploaded_path, "r") as f:
+    uploaded = [ l.strip() for l in f.readlines() ]
+
+for v in reversed(vids):
+    status = "DONE" if v['id'] in uploaded else "TODO"
+    print(f"{status} -- [ID:{v['id']}] {v['title']}")
+    if status != "DONE":
+        answer = input(f"== Please upload the video https://youtube.com/watch?v={v['id']}\nUploaded?[y/N]")
+        if answer == "y":
+            uploaded.append(v['id'])
+        if input("Continue?[y/N]") != "y": break
+
+# Update uploaded
+with open(uploaded_path, "w") as f:
+    f.writelines([ i + "\n" for i in uploaded ])
+
