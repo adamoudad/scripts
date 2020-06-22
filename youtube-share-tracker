@@ -10,7 +10,7 @@ import googleapiclient.discovery
 
 api_service_name = "youtube"
 api_version = "v3"
-from settings import DEVELOPER_KEY, CHANNEL_ID
+from settings import DEVELOPER_KEY, CHANNEL_ID, UPLOADED_PATH
 
 youtube = googleapiclient.discovery.build(
     api_service_name, api_version, developerKey = DEVELOPER_KEY)
@@ -43,7 +43,7 @@ vids = [ {
     'title': v["snippet"]["title"]
 } for v in videos ]
 
-uploaded_path = "./uploaded.txt"
+uploaded_path = UPLOADED_PATH
 with open(uploaded_path, "r") as f:
     uploaded = [ l.strip() for l in f.readlines() ]
 
