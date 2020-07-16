@@ -35,6 +35,21 @@ def get_channel_videos(channelId):
         if not next_page_token:
             return videos
 
+
+def check_video(v, uploaded):
+    """
+    Displays the status of a video, then return True if the video is already shared, or ask user confirmation is the video has not yet been shared
+    """
+    status = "DONE" if v['id'] in uploaded else "TODO"
+    print(f"{status} -- [ID:{v['id']}] {v['title']}")
+    if status != "DONE":
+        answer = input(f"== Please upload the video https://youtube.com/watch?v={v['id']}\nUploaded?[y/N]")
+        if answer == "y":
+            uploaded.append(v['id'])
+        return input("Continue?[y/N]") == "y"
+    return True
+
+
 videos = get_channel_videos(channelId=CHANNEL_ID)
 
 vids = [ {
