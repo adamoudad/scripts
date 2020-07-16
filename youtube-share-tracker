@@ -47,6 +47,10 @@ uploaded_path = UPLOADED_PATH
 with open(uploaded_path, "r") as f:
     uploaded = [ l.strip() for l in f.readlines() ]
 
+last_video = vids[0]
+last_video_status = "DONE" if last_video['id'] in uploaded else "TODO"
+print(f"Last video ({last_video_status}) -- [ID:{last_video['id']}] {last_video['title']}")
+
 for v in reversed(vids):
     status = "DONE" if v['id'] in uploaded else "TODO"
     print(f"{status} -- [ID:{v['id']}] {v['title']}")
