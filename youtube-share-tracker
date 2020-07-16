@@ -60,20 +60,13 @@ vids = [ {
 
 uploaded_path = UPLOADED_PATH
 with open(uploaded_path, "r") as f:
-    uploaded = [ l.strip() for l in f.readlines() ]
+    uploaded = [line.strip() for line in f.readlines()]
 
-last_video = vids[0]
-last_video_status = "DONE" if last_video['id'] in uploaded else "TODO"
-print(f"Last video ({last_video_status}) -- [ID:{last_video['id']}] {last_video['title']}")
-
-for v in reversed(vids):
-    status = "DONE" if v['id'] in uploaded else "TODO"
-    print(f"{status} -- [ID:{v['id']}] {v['title']}")
-    if status != "DONE":
-        answer = input(f"== Please upload the video https://youtube.com/watch?v={v['id']}\nUploaded?[y/N]")
-        if answer == "y":
-            uploaded.append(v['id'])
-        if input("Continue?[y/N]") != "y": break
+print("Last video:")
+if check_video(vids[0], uploaded):
+    for v in reversed(vids):
+        if not check_video(v, uploaded):
+            break
 
 # Update uploaded
 with open(uploaded_path, "w") as f:
