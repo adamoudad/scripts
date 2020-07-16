@@ -1,8 +1,7 @@
 #!/bin/python
 # -*- coding: utf-8 -*-
-
-import os
 import googleapiclient.discovery
+from settings import DEVELOPER_KEY, CHANNEL_ID, UPLOADED_PATH
 
 # # Disable OAuthlib's HTTPS verification when running locally.
 # # *DO NOT* leave this option enabled in production.
@@ -10,10 +9,10 @@ import googleapiclient.discovery
 
 api_service_name = "youtube"
 api_version = "v3"
-from settings import DEVELOPER_KEY, CHANNEL_ID, UPLOADED_PATH
 
 youtube = googleapiclient.discovery.build(
-    api_service_name, api_version, developerKey = DEVELOPER_KEY)
+    api_service_name, api_version, developerKey=DEVELOPER_KEY)
+
 
 def get_channel_videos(channelId):
     response = youtube.channels().list(
@@ -52,11 +51,11 @@ def check_video(v, uploaded):
 
 videos = get_channel_videos(channelId=CHANNEL_ID)
 
-vids = [ {
+vids = [{
     'upload date': v["snippet"]["publishedAt"],
     'id': v["snippet"]["resourceId"]["videoId"],
     'title': v["snippet"]["title"]
-} for v in videos ]
+} for v in videos]
 
 uploaded_path = UPLOADED_PATH
 with open(uploaded_path, "r") as f:
@@ -70,5 +69,4 @@ if check_video(vids[0], uploaded):
 
 # Update uploaded
 with open(uploaded_path, "w") as f:
-    f.writelines([ i + "\n" for i in uploaded ])
-
+    f.writelines([i + "\n" for i in uploaded])
