@@ -29,7 +29,8 @@ def filter_history(cmd="mv", max_length=50,
     """
     commands = []
     with open(path, "r") as f:
-        for line in f:
+        lines = f.readlines()
+        for line in reversed(lines):
             command = parse(line)
             if command:
                 commands.append(command)
