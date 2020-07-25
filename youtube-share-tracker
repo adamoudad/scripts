@@ -63,10 +63,10 @@ with open(uploaded_path, "r") as f:
 
 print("Last video:")
 if check_video(vids[0], uploaded):
+    print("-"*8)
     for v in reversed(vids):
         if not check_video(v, uploaded):
             break
-
 # Update uploaded
 with open(uploaded_path, "w") as f:
     f.writelines([i + "\n" for i in uploaded])
