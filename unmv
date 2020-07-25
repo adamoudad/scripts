@@ -2,22 +2,40 @@
 # Undo last mv commands
 
 from pathlib import Path
-history_path= Path.home() / ".zsh_history"
+zsh_history_path = Path.home() / ".zsh_history"
+fish_history_path = Path.home() / ".local/share/fish/fish_history"
 
-def filter_history(cmd="mv"):
+
+def parse_fish_history_line(line):
+    if line[0] != "-":
+        return ""
+    else:
+        return line.split(":")[-1].strip()  # Retrieve the full comman
+
+
+def parse_zsh_history_line(line, omz=True):
+    if not omz:
+        raise NotImplementedError
+    return ";".join(line.strip().split(";")[1:])
+
+
+def filter_history(cmd="mv", max_length=50,
+                   path=fish_history_path,
+                   parse=parse_fish_history_line):
     """
-    Filter history to lines with cmd
+    Filter history to lines with cmd.
+    :param str cmd: Which command to search for in the history.
+    :param bool omz: Parse history as oh-my-zsh history if True. Otherwise parse as default zsh history.
     """
     commands = []
-    with open(history_path, "r") as f:
-        count = 50
-        for l in f:
-            command = ";".join(l.strip().split(";")[1:])
-            commands.append(command)
-            count -= 1
-            if not count:
-                break
-    commands = [ c for c in commands if c.split()[0] == cmd]
+    with open(path, "r") as f:
+        for line in f:
+            command = parse(line)
+            if command:
+                commands.append(command)
+                if len(commands) >= max_length:
+                    break
+    commands = [c for c in commands if c.split()[0] == cmd]
     return commands
 
 def reverse_command(command):
