@@ -48,9 +48,11 @@ def reverse_command(command):
     destination = Path(command[-1])
     original_sources = [Path(f) for f in command[1:-1]]
     if destination.is_file():
-        sources = [destination.parent / f.name for f in original_sources]
+        sources = [destination.expanduser().parent / f.name
+                   for f in original_sources]
     else:
-        sources = [destination / f.name for f in original_sources]
+        sources = [destination.expanduser() / f.name
+                   for f in original_sources]
     return sources, original_sources
 
 
