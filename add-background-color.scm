@@ -1,4 +1,6 @@
 ;; Add white background to an image
+;; Copy this script in ~/.config/GIMP/2.10/scripts
+;; Then run "./add-background-color /path/to/your/image"
 (define (add-background-color filename color)
   (let* ((image (car (gimp-file-load RUN-NONINTERACTIVE filename filename)))
 	 (imageWidth (car (gimp-image-width image)))

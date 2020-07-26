@@ -1,5 +1,3 @@
 #!/bin/bash
 #-*- encoding: utf-8 -*-
-echo "$1"
-gimp -i -b '(add-background-color '"$1"' "black")' -b '(gimp-quit 0)'
-# '(script-fu-add-background $1 "black")'
+gimp -i -b \''(add-background-color '"$1"' white)'\' -b '(gimp-quit 0)'
