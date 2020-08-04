@@ -67,6 +67,9 @@ if check_video(vids[0], uploaded):
     for v in reversed(vids):
         if not check_video(v, uploaded):
             break
+
+print(f"Shared {len(uploaded)} of {len(vids)} videos. " )
+
 # Update uploaded
 with open(uploaded_path, "w") as f:
     f.writelines([i + "\n" for i in uploaded])
