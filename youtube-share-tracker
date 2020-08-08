@@ -68,7 +68,7 @@ if check_video(vids[0], uploaded):
         if not check_video(v, uploaded):
             break
 
-print(f"Shared {len(uploaded)} of {len(vids)} videos. " )
+print(f"Shared {len(uploaded)} of {len(vids)} videos. ({len(uploaded)/len(vids):.0%})" )
 
 # Update uploaded
 with open(uploaded_path, "w") as f:
