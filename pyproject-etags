@@ -13,7 +13,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -n $PROJECT_PATH && -d $PROJECT_PATH ]]; then
-    find $PROJECT_PATH -name "*.py" | etags -
+    find $PROJECT_PATH -name "*.py" | etags -o $PROJECT_PATH/TAGS -
 else
     echo "Project path \"$PROJECT_PATH\" was not set or is not a directory." 
     exit
