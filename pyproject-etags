@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Generate the TAGS file for a python project given
+# Argument: path to the project (defaults to $(pwd))
+
+PROJECT_PATH=$(pwd)
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+	*)
+	    PROJECT_PATH=$1
+	    break
+	    ;;
+    esac
+done
+
+if [[ -d $PROJECT_PATH ]]; then
+    find $PROJECT_PATH -name "*.py" | etags -
+else
+    echo "$PROJECT_PATH is not a directory." 
+    exit
+fi
