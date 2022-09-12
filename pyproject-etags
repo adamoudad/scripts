@@ -2,8 +2,7 @@
 # Generate the TAGS file for a python project given
 # Argument: path to the project (defaults to $(pwd))
 
-PROJECT_PATH=$(pwd)
-
+PROJECT_PATH=""
 while [[ $# -gt 0 ]]; do
     case $1 in
 	*)
@@ -13,9 +12,9 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-if [[ -d $PROJECT_PATH ]]; then
+if [[ -n $PROJECT_PATH && -d $PROJECT_PATH ]]; then
     find $PROJECT_PATH -name "*.py" | etags -
 else
-    echo "$PROJECT_PATH is not a directory." 
+    echo "Project path \"$PROJECT_PATH\" was not set or is not a directory." 
     exit
 fi
