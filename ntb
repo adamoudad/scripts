@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+# Spawn a Jupyter instance and open a temporary notebook for quick tests.
+# Credits: https://github.com/sdushantha/dotfiles/blob/master/bin/bin/utils/tmpjn
+
+nb_file_name="$(mktemp --suffix .ipynb)"
+
+# The content of an "empty" Jupyter Notebook file.
+# Even though the file is not empty, Jupyter Notebook will
+# detect that this a Interactive Python Notebook.
+cat >"$nb_file_name" << EOL
+{
+ "cells": [],
+ "metadata": {},
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
+EOL
+
+# Open the "empty" Notebook
+jupyter notebook "$nb_file_name"

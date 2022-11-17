@@ -1,0 +1,9 @@
+#!/bin/bash
+# Edit the battery threshold (tested on Asus Zenbook 14). Must be ran as root.
+
+if [[ -n $1 ]]; then
+    echo $@ > /sys/class/power_supply/BATT/charge_control_end_threshold
+    echo "New threshold is " $(cat /sys/class/power_supply/BATT/charge_control_end_threshold)
+else
+    echo "Please provide a percentage in argument."
+fi

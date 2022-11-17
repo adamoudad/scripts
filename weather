@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Fetch and print a 3-day ahead weather forecast.
+city=$(echo $@)
+if [[ -z $city ]] ; then
+    # Default
+    city="Kanagawa Hiyoshi"
+fi
+
+# Replace spaces with %20
+city=${city// /%20}
+
+curl "wttr.in/$city"
