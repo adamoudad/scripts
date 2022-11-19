@@ -2,27 +2,48 @@
 # Start a tmux session and run a batch of commands, each in a separate window.
 # Use byobu if available, or tmux by default.
 
-# commands=("python -i")
-command="python -i"
-session="Experiments"
+COMMAND="python -i /home/adam/Tests/approx_pi_montecarlo.py"
+SESSION="Experiments"
+POSITIONAL_ARGS=()
 
-# echo ${commands[1]}
-# tmux attach-session -t $session \; byobu new-window -n "$window" \; send-keys -t $session:"$window" "${commands[1]}" C-m
+while [[ $# -gt 0 ]]; do
+    case $1 in
+	-n|--name)
+	    SESSION=$2
+	    shift
+	    shift
+	    ;;
+	-c|--command)
+	    COMMAND=$2
+	    shift
+	    shift
+	    ;;
+	-*|--*)
+	    echo "Unknown option $1"
+	    exit 1
+	    ;;
+	*)
+	    POSITIONAL_ARGS+=("$1")
+	    shift
+	    ;;
+    esac
+done
+
 if [[ $(command -v byobu) ]]; then
-    multiplexer=byobu
+    MULTIPLEXER=byobu
 else
-    multiplexer=tmux
+    MULTIPLEXER=tmux
 fi
 
-echo "Using $multiplexer"
+echo "Using $MULTIPLEXER"
 
-$multiplexer new-session -d -s $session 2> /dev/null || echo "Session $session already exists."
+$MULTIPLEXER new-session -d -s $SESSION 2> /dev/null || echo "Session $SESSION already exists."
 
-for parameter in "11" "22"; do
-    window="$parameter"
-    command_with_parameter="$command /home/adam/Tests/approx_pi_montecarlo.py $parameter "
-    $multiplexer new-window -t "$session" -n "$window" -- $command_with_parameter;
-    echo "$session:$window <- $command_with_parameter"
+for PARAMETER in ${POSITIONAL_ARGS[@]}; do
+    WINDOW="$PARAMETER"
+    COMMAND_WITH_PARAMETER="$COMMAND $PARAMETER "
+    $MULTIPLEXER new-window -t "$SESSION" -n "$WINDOW" -- $COMMAND_WITH_PARAMETER;
+    echo "$SESSION:$WINDOW <- $COMMAND_WITH_PARAMETER"
 done
 
 
