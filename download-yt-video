@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Wrapper around yt-dlp to download audio and video from youtube.
+
+OUTDIR=~/Vidéos
+POSITIONAL_ARGS=()
+RESOLUTION=360
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+	-r|--res)
+	    RESOLUTION=$2
+	    case $RESOLUTION in
+		144)
+		;;
+		240)
+		;;
+		360)
+		;;
+		480)
+		;;
+		720)
+		;;
+		1080)
+		;;
+		*)
+		    echo "Resolution (144|240|360|480|720|1080)"
+		    exit
+		    ;;
+	    esac
+	    shift
+	    shift
+	    ;;
+	-o|--output)
+	    OUTDIR=$2
+	    shift
+	    shift
+	    ;;
+	-t|--tags)
+		shift
+		tags=$1
+		shift
+		;;
+	-*|--*)
+	    echo "Unknown option $1"
+	    exit 1
+	    ;;
+	*)
+	    POSITIONAL_ARGS+=("$1")
+	    shift
+	    ;;
+    esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}"
+URL=${POSITIONAL_ARGS[0]}
+
+echo "Videos dir set to $OUTDIR"
+echo "URL: $URL"
+
+EXTRACT_AUDIO=""
+FORMAT="bestvideo[height<=$RESOLUTION]+bestaudio/best[height<=$RESOLUTION]"
+
+yt-dlp $EXTRACT_AUDIO -f $FORMAT  "$URL" -o "$OUTDIR/%(title)s_%(uploader)s_%(upload_date)s.%(ext)s" --add-metadata # --postprocessing-args "-metadata comment=\"$tags\""
+
+# Add  "--audio-format mp3" to specify audio format

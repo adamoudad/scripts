@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Download audio of youtube videos from URL to mp3 into the ~/Podcasts/ folder
+
+OUTDIR=~/Musique
+POSITIONAL_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+	-o|--output)
+	    OUTDIR=$2
+	    shift
+	    shift
+	    ;;
+	-f|--freestyle)
+		OUTDIR=$OUTDIR/Freestyle_rap
+		shift
+		;;
+	-p|--podcast)
+		OUTDIR=$OUTDIR/Podcasts
+		shift
+		;;
+	-t|--tags)
+		shift
+		tags=$1
+		shift
+		;;
+	-*|--*)
+	    echo "Unknown option $1"
+	    exit 1
+	    ;;
+	*)
+	    POSITIONAL_ARGS+=("$1")
+	    shift
+	    ;;
+    esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}"
+URL=${POSITIONAL_ARGS[0]}
+
+echo "Audio dir set to $OUTDIR"
+
+yt-dlp -x --audio-format mp3 "$URL" -o "$OUTDIR/%(title)s_%(uploader)s_%(upload_date)s.%(ext)s" --add-metadata --postprocessor-args "-metadata comment=\"$tags\""
